@@ -1251,6 +1251,7 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (function(){
   const c = document.getElementById('field');
@@ -1296,12 +1297,24 @@
 })();
 
 (function(){
+  // Adiciona a classe reveal automaticamente aos elementos principais para o efeito de fade-in no scroll
+  document.querySelectorAll('section h2, section h3, .sector-card, article, .border-l-2').forEach(el => el.classList.add('reveal'));
+
   const els = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
   els.forEach(el=>io.observe(el));
 })();
+
+// Inicializa o Lenis para um scroll super suave (Smooth Scroll Premium)
+if (typeof Lenis !== 'undefined') {
+  const lenis = new Lenis({
+    autoRaf: true,
+    lerp: 0.1, // Suavidade do scroll
+    smoothWheel: true
+  });
+}
 
 (function(){
   const bars = document.querySelectorAll('.bar-fill');
