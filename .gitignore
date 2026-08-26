@@ -1,0 +1,5 @@
+.firebase/
+.firebaserc
+node_modules/
+.vercel/
+.netlify/

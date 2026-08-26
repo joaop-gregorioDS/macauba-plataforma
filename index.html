@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Macaúba · Plataforma de Soberania Tecnológica e Energética</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Archivo:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #07120e;
+    --bg-2: #0c1d16;
+    --bg-3: #102a1f;
+    --ink: #f3ede0;
+    --ink-dim: #b8b0a0;
+    --muted: #6f7a72;
+    --line: #1d3329;
+    --amber: #e6b43c;
+    --amber-bright: #f5cf52;
+    --gold: #d4a534;
+    --rust: #c0612b;
+    --leaf: #4a8a5f;
+    --leaf-bright: #7ec488;
+    --biofuel: #d8c23a;
+  }
+  *{ -webkit-font-smoothing: antialiased; }
+  html, body{ background: var(--bg); color: var(--ink); font-family: 'Archivo', sans-serif; }
+  .font-display{ font-family: 'Fraunces', serif; font-optical-sizing: auto; font-variation-settings: "opsz" 144, "SOFT" 50; }
+  .font-mono{ font-family: 'JetBrains Mono', monospace; }
+
+  #field{ position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .55; }
+
+  .grain::before{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.35; mix-blend-mode:overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .palm-halo{
+    background:
+      radial-gradient(closest-side, rgba(230,180,60,.18), rgba(230,180,60,0) 70%),
+      radial-gradient(circle at 30% 40%, rgba(126,196,136,.12), transparent 60%);
+  }
+
+  .vtext{ writing-mode: vertical-rl; transform: rotate(180deg); }
+
+  .marquee{ display:flex; gap: 4rem; animation: scroll 60s linear infinite; }
+  @keyframes scroll{ from{ transform: translateX(0) } to{ transform: translateX(-50%) } }
+
+  .u-anim{ background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .5s ease; }
+  .u-anim:hover{ background-size: 100% 1px; }
+
+  @keyframes fall{
+    0%{ transform: translateY(-120%); opacity: 0; }
+    20%{ opacity: 1; }
+    100%{ transform: translateY(220%); opacity: 0; }
+  }
+  .drop{ animation: fall 3.6s cubic-bezier(.5,.05,.7,.4) infinite; }
+
+  .reveal{ opacity:0; transform: translateY(20px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in{ opacity:1; transform: none; }
+
+  tbody tr{ transition: background .3s ease, transform .3s ease; }
+  tbody tr:hover{ background: linear-gradient(90deg, rgba(230,180,60,.08), transparent); }
+
+  .sector-card{ transition: transform .5s cubic-bezier(.2,.8,.2,1), border-color .5s ease; }
+  .sector-card:hover{ transform: translateY(-6px); border-color: var(--amber); }
+
+  .num-grad{
+    background: linear-gradient(180deg, #f5cf52 0%, #e6b43c 45%, #c0612b 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .cycle-rot{ animation: rot 80s linear infinite; transform-origin: center; }
+  @keyframes rot{ to{ transform: rotate(360deg); } }
+
+  .bar-fill{ transform-origin: left; transform: scaleX(0); transition: transform 1.4s cubic-bezier(.2,.8,.2,1); }
+  .bar-fill.in{ transform: scaleX(1); }
+
+  ::-webkit-scrollbar{ width: 10px; height:10px; }
+  ::-webkit-scrollbar-track{ background: #07120e; }
+  ::-webkit-scrollbar-thumb{ background: #1d3329; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover{ background: #2a4a3a; }
+
+  ::selection{ background: var(--amber); color: var(--bg); }
+
+  @keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1) } 50%{ opacity:.4; transform:scale(.7) } }
+  .pulse{ animation: pulse 2s ease-in-out infinite; }
+
+  .nav-blur{ backdrop-filter: blur(20px) saturate(140%); background: rgba(7,18,14,.6); }
+  .glow-border{ box-shadow: inset 0 0 0 1px rgba(230,180,60,.15), 0 30px 80px -40px rgba(230,180,60,.25); }
+
+  .progress-bar{ position:fixed; top:0; left:0; right:0; height:2px; z-index:60; pointer-events:none; }
+  .progress-fill{ height:100%; background: var(--amber); transform: scaleX(0); transform-origin: left; }
+
+  .sim-slider{
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 8px; border-radius: 99px;
+    background: #1d3329; outline: none; cursor: pointer;
+  }
+  .sim-slider::-webkit-slider-thumb{
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--amber); border: 2px solid var(--amber-bright);
+    box-shadow: 0 0 0 4px rgba(230,180,60,.22); cursor: pointer;
+  }
+  .sim-slider::-moz-range-thumb{
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--amber); border: 2px solid var(--amber-bright); cursor: pointer;
+  }
+  .preset-btn.ativo{
+    background: var(--amber); color: var(--bg); border-color: var(--amber);
+  }
+
+  .modal-overlay{
+    position: fixed; inset: 0; z-index: 80;
+    background: rgba(5,13,10,.82); backdrop-filter: blur(10px);
+    display: none; align-items: center; justify-content: center; padding: 24px;
+  }
+  .modal-overlay.aberto{ display: flex; }
+
+  .prod-track{ height: 8px; background: #1d3329; border-radius: 99px; position: relative; }
+  .prod-bar{ position: absolute; top: 0; height: 100%; border-radius: 99px; background: var(--amber); }
+
+  .fruit-seg{ height: 14px; }
+  .timeline-fill{ transform: scaleX(0); transform-origin: left; transition: transform 1.6s cubic-bezier(.2,.8,.2,1); }
+  .timeline-fill.in{ transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body class="relative overflow-x-hidden">
+
+<canvas id="field"></canvas>
+<div class="progress-bar" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- ============== NAV ============== -->
+<nav class="nav-blur fixed top-0 inset-x-0 z-50 border-b border-[#1d3329]">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10 h-16 flex items-center justify-between">
+    <a href="#topo" class="flex items-center gap-3">
+      <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 C 28 8, 32 14, 32 22 C 32 30, 26 36, 20 36 C 14 36, 8 30, 8 22 C 8 14, 12 8, 20 4 Z" stroke="#e6b43c" stroke-width="1.2" fill="none"/>
+        <circle cx="20" cy="22" r="4" fill="#e6b43c"/>
+        <path d="M20 36 L 20 39" stroke="#e6b43c" stroke-width="1.2"/>
+      </svg>
+      <div class="leading-tight">
+        <div class="font-display text-[15px] tracking-tight">Macaúba</div>
+        <div class="font-mono text-[9px] uppercase tracking-[.25em] text-[var(--muted)]">Plataforma Soberana</div>
+      </div>
+    </a>
+    <ul class="hidden lg:flex items-center gap-7 text-[11px] uppercase tracking-[.2em] text-[var(--ink-dim)]">
+      <li><a class="u-anim" href="#plataforma">Plataforma</a></li>
+      <li><a class="u-anim" href="#balanco">Balanço</a></li>
+      <li><a class="u-anim" href="#eixos">Eixos</a></li>
+      <li><a class="u-anim" href="#cadeia">Cadeia</a></li>
+      <li><a class="u-anim" href="#horizonte">Horizonte</a></li>
+      <li><a class="u-anim" href="#pragmatica">Pragmática</a></li>
+    </ul>
+    <div class="hidden md:flex items-center gap-2 text-[11px] font-mono text-[var(--muted)]">
+      <span class="w-1.5 h-1.5 rounded-full bg-[var(--leaf-bright)] pulse"></span>
+      LIVE · <span id="navLiveUsd">USD 923.15 BI</span> / ANO
+    </div>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<header id="topo" class="relative min-h-screen grain pt-16 overflow-hidden">
+  <div class="absolute inset-0 palm-halo"></div>
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="drop absolute left-[12%] top-[10%] w-[3px] h-12 bg-gradient-to-b from-transparent via-[var(--amber)] to-[var(--amber-bright)] rounded-full"></div>
+    <div class="drop absolute left-[78%] top-[5%] w-[3px] h-16 bg-gradient-to-b from-transparent via-[var(--amber)] to-[var(--amber-bright)] rounded-full" style="animation-delay:1.2s"></div>
+    <div class="drop absolute left-[45%] top-[15%] w-[2px] h-10 bg-gradient-to-b from-transparent via-[var(--biofuel)] to-[var(--amber-bright)] rounded-full" style="animation-delay:2.4s"></div>
+    <div class="drop absolute left-[88%] top-[20%] w-[2px] h-14 bg-gradient-to-b from-transparent via-[var(--amber)] to-[var(--rust)] rounded-full" style="animation-delay:.6s"></div>
+  </div>
+
+  <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10 pt-20 lg:pt-28">
+    <div class="flex items-center justify-between mb-12 lg:mb-16">
+      <div class="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[.3em] text-[var(--ink-dim)]">
+        <span class="w-8 h-px bg-[var(--amber)]"></span>
+        Dossiê 01 / Brasil · 2026 · Unificado
+      </div>
+      <div class="hidden md:block text-[11px] font-mono uppercase tracking-[.3em] text-[var(--ink-dim)]">
+        Acrocomia aculeata · Jacq. Lodd. ex Mart.
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+      <div class="lg:col-span-8">
+        <div class="text-[var(--amber)] font-mono text-[12px] uppercase tracking-[.35em] mb-6">
+          Refinaria Integrada das Cadeias Globais de Valor
+        </div>
+        <h1 class="font-display font-light leading-[0.86] tracking-[-0.04em] text-[64px] sm:text-[88px] lg:text-[132px] xl:text-[156px]">
+          <span class="block">Cem</span>
+          <span class="block italic font-normal" style="font-variation-settings:'opsz' 144, 'SOFT' 100;">Milhões</span>
+          <span class="block">de <span class="num-grad font-semibold">Hectares</span>.</span>
+        </h1>
+        <p class="mt-10 max-w-2xl text-[17px] lg:text-[19px] leading-relaxed text-[var(--ink-dim)]">
+          Não é uma cultura. É uma <em class="text-[var(--ink)] not-italic font-medium">plataforma de soberania</em>.
+          Em cem milhões de hectares de pastagens degradadas, a Macaúba deixa de ser biomassa exportada e se converte na maior refinaria verde do planeta — reescrevendo transporte, alimentos, siderurgia e manufatura avançada.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-2">
+          <span class="font-mono text-[10px] uppercase tracking-[.18em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)]">100% nativa</span>
+          <span class="font-mono text-[10px] uppercase tracking-[.18em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)]">HVO &amp; SAF</span>
+          <span class="font-mono text-[10px] uppercase tracking-[.18em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)]">Segurança alimentar</span>
+          <span class="font-mono text-[10px] uppercase tracking-[.18em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)]">Aço verde</span>
+          <span class="font-mono text-[10px] uppercase tracking-[.18em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)]">Crédito de carbono</span>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 space-y-6">
+        <div class="border-l-2 border-[var(--amber)] pl-5">
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Faturamento Bruto Anual</div>
+          <div class="font-display text-[44px] leading-none num-grad">US$ 923,15 Bi</div>
+          <div class="font-mono text-[12px] text-[var(--ink-dim)] mt-1">≈ R$ 4,80 trilhões / ano</div>
+        </div>
+        <div class="border-l border-[#1d3329] pl-5">
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Diesel Verde (HVO)</div>
+          <div class="font-display text-[28px] leading-none">525 Bi L</div>
+        </div>
+        <div class="border-l border-[#1d3329] pl-5">
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Querosene de Aviação (SAF)</div>
+          <div class="font-display text-[28px] leading-none">75 Bi L</div>
+        </div>
+        <div class="border-l border-[#1d3329] pl-5">
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Farelo Proteico</div>
+          <div class="font-display text-[28px] leading-none">1,2 Bi t <span class="text-[14px] text-[var(--ink-dim)]">· 10× soja BR</span></div>
+        </div>
+        <a href="#balanco" class="inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[.2em] text-[var(--amber)] u-anim">↓ Simular outros cenários de área</a>
+      </div>
+    </div>
+
+    <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-[var(--line)] pt-8">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Frutos / ha</div>
+        <div class="font-display text-[22px]">15 t · ano</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Ciclo produtivo</div>
+        <div class="font-display text-[22px]">50 anos</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Retorno</div>
+        <div class="font-display text-[22px]">3º ano</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Densidade</div>
+        <div class="font-display text-[22px]">156 pl / ha</div>
+      </div>
+    </div>
+
+    <div class="mt-16 lg:mt-20 flex items-center justify-between text-[11px] font-mono uppercase tracking-[.3em] text-[var(--muted)]">
+      <div class="flex items-center gap-3">
+        <span class="vtext"> ↓ Role para decodificar</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span>01</span>
+        <span class="w-12 h-px bg-[var(--line)]"></span>
+        <span>08</span>
+      </div>
+    </div>
+  </div>
+
+  <svg class="absolute -bottom-2 right-0 w-[60%] max-w-[900px] opacity-[0.13]" viewBox="0 0 600 400" fill="none">
+    <path d="M300 380 C 280 280, 250 200, 220 120 M300 380 C 290 260, 280 160, 290 60 M300 380 C 320 280, 350 200, 380 120 M300 380 C 330 280, 360 180, 410 100 M300 380 C 270 280, 240 180, 190 100" stroke="#e6b43c" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="220" cy="120" rx="50" ry="8" transform="rotate(-30 220 120)" fill="#e6b43c" opacity=".4"/>
+    <ellipse cx="290" cy="60" rx="55" ry="8" fill="#e6b43c" opacity=".4"/>
+    <ellipse cx="380" cy="120" rx="50" ry="8" transform="rotate(30 380 120)" fill="#e6b43c" opacity=".4"/>
+    <ellipse cx="410" cy="100" rx="55" ry="8" transform="rotate(45 410 100)" fill="#e6b43c" opacity=".4"/>
+    <ellipse cx="190" cy="100" rx="55" ry="8" transform="rotate(-45 190 100)" fill="#e6b43c" opacity=".4"/>
+    <circle cx="300" cy="380" r="14" fill="#e6b43c"/>
+    <ellipse cx="300" cy="365" rx="22" ry="14" fill="#c0612b" opacity=".7"/>
+  </svg>
+</header>
+
+<!-- ============== MARQUEE ============== -->
+<section class="relative border-y border-[#1d3329] bg-[#0a1813] py-5 overflow-hidden">
+  <div class="marquee whitespace-nowrap font-display text-[28px] text-[var(--ink-dim)]">
+    <span class="flex items-center gap-16">
+      <span>HVO · Diesel Verde</span><span class="text-[var(--amber)]">✦</span>
+      <span>SAF · Querosene de Aviação</span><span class="text-[var(--amber)]">✦</span>
+      <span>Farelo Proteico</span><span class="text-[var(--amber)]">✦</span>
+      <span>Ácido Láurico</span><span class="text-[var(--amber)]">✦</span>
+      <span>GLP Verde</span><span class="text-[var(--amber)]">✦</span>
+      <span>Fibras Lignocelulósicas</span><span class="text-[var(--amber)]">✦</span>
+      <span>Glicerina Bruta</span><span class="text-[var(--amber)]">✦</span>
+      <span>Biochar · Créditos de Carbono</span><span class="text-[var(--amber)]">✦</span>
+    </span>
+    <span class="flex items-center gap-16" aria-hidden="true">
+      <span>HVO · Diesel Verde</span><span class="text-[var(--amber)]">✦</span>
+      <span>SAF · Querosene de Aviação</span><span class="text-[var(--amber)]">✦</span>
+      <span>Farelo Proteico</span><span class="text-[var(--amber)]">✦</span>
+      <span>Ácido Láurico</span><span class="text-[var(--amber)]">✦</span>
+      <span>GLP Verde</span><span class="text-[var(--amber)]">✦</span>
+      <span>Fibras Lignocelulósicas</span><span class="text-[var(--amber)]">✦</span>
+      <span>Glicerina Bruta</span><span class="text-[var(--amber)]">✦</span>
+      <span>Biochar · Créditos de Carbono</span><span class="text-[var(--amber)]">✦</span>
+    </span>
+  </div>
+</section>
+
+<!-- ============== PLATAFORMA ============== -->
+<section id="plataforma" class="relative py-28 lg:py-40 grain">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 lg:gap-20">
+      <div class="lg:col-span-5">
+        <div class="sticky top-28">
+          <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-6">§ 01 — A Plataforma</div>
+          <h2 class="font-display text-[44px] lg:text-[68px] leading-[0.95] tracking-[-0.02em] font-light">
+            Da <em class="italic font-normal">biomassa bruta</em> à refinaria <span class="num-grad font-semibold">integrada</span>.
+          </h2>
+          <div class="mt-10 inline-flex items-center gap-3 border border-[var(--line)] rounded-full px-4 py-2 text-[11px] font-mono uppercase tracking-[.25em] text-[var(--ink-dim)]">
+            <span class="w-1.5 h-1.5 rounded-full bg-[var(--amber)] pulse"></span>
+            Visão Estrutural
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-7 space-y-10">
+        <p class="text-[19px] leading-[1.7] text-[var(--ink-dim)]">
+          O mérito central desta visão é <span class="text-[var(--ink)] font-medium">transformar o Brasil de exportador de biomassa bruta em refinaria integrada das cadeias globais de valor</span>. Ao abrir o balanço de massa da Macaúba para além dos combustíveis, fica evidente que ela não redesenha apenas a matriz de transporte — mas também a segurança alimentar, a siderurgia e a indústria de transformação global.
+        </p>
+
+        <div class="grid sm:grid-cols-2 gap-6">
+          <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/60 hover:border-[var(--amber)]/40 transition-colors">
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Princípio 01</div>
+            <div class="font-display text-[22px] leading-tight mb-2">Retensão do Refino</div>
+            <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">O valor político e econômico está em manter as plantas HEFA e de eletrólise de H₂V em território nacional. Exportar óleo bruto é repetir o erro histórico.</p>
+          </div>
+          <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/60 hover:border-[var(--amber)]/40 transition-colors">
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Princípio 02</div>
+            <div class="font-display text-[22px] leading-tight mb-2">Custo Marginal Zero</div>
+            <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">O custo de produção agrícola é tão baixo que, mesmo com deflação internacional pela abundância de oferta, as margens integradas permanecem protegidas.</p>
+          </div>
+          <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/60 hover:border-[var(--amber)]/40 transition-colors">
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Princípio 03</div>
+            <div class="font-display text-[22px] leading-tight mb-2">Balanço de Massa Aberto</div>
+            <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Cada fração do fruto — epicarpo, mesocarpo, endocarpo, amêndoa — alimenta uma cadeia industrial distinta, maximizando valor por hectare.</p>
+          </div>
+          <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/60 hover:border-[var(--amber)]/40 transition-colors">
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Princípio 04</div>
+            <div class="font-display text-[22px] leading-tight mb-2">Soberania Geopolítica</div>
+            <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Quebra da dependência de NPK, do coque metalúrgico e do diesel fóssil em um único movimento estrutural.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-20 grid md:grid-cols-4 border-y border-[var(--line)]">
+      <div class="p-8 md:border-r border-[var(--line)]">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Receita bruta</div>
+        <div class="font-display text-[32px] num-grad leading-none">R$ 4,80 tri</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-3">≈ 45% do PIB agrícola brasileiro atual.</p>
+      </div>
+      <div class="p-8 md:border-r border-[var(--line)]">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Empregos diretos</div>
+        <div class="font-display text-[32px] leading-none">≈ 20 Mi</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-3">Uma vaga para cada 5 hectares plantados.</p>
+      </div>
+      <div class="p-8 md:border-r border-[var(--line)]">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Sequestro · ILPF</div>
+        <div class="font-display text-[32px] leading-none">≈ 600 Mt</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-3">CO₂eq / ano — cerca de 13% das emissões brasileiras.</p>
+      </div>
+      <div class="p-8">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-3">Óleo vegetal</div>
+        <div class="font-display text-[32px] leading-none">≈ 355 Bi L</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-3">Cerca de 12× os derivados de petróleo atuais.</p>
+      </div>
+    </div>
+
+    <div class="mt-16 grid lg:grid-cols-12 gap-10">
+      <div class="lg:col-span-7 space-y-6">
+        <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)]">Por que a Macaúba muda tudo</div>
+        <h3 class="font-display text-[32px] lg:text-[40px] leading-[1.05] font-light">Nativa. Perene. Sem competir com alimentos.</h3>
+        <div class="space-y-5">
+          <div class="flex gap-4">
+            <span class="font-mono text-[11px] text-[var(--amber)] mt-1">01</span>
+            <div>
+              <div class="font-display text-[20px] mb-1">Cultivo em áreas degradadas</div>
+              <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Ocupa os 109,7 milhões de hectares de pastagens com algum grau de degradação — sem disputar terra com culturas alimentares e sem desmatar.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <span class="font-mono text-[11px] text-[var(--amber)] mt-1">02</span>
+            <div>
+              <div class="font-display text-[20px] mb-1">Alta tolerância à seca</div>
+              <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Produz com baixo consumo hídrico em solos pobres do Cerrado, Nordeste e Centro-Oeste — perfil agroclimático que o dendê não cobre.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <span class="font-mono text-[11px] text-[var(--amber)] mt-1">03</span>
+            <div>
+              <div class="font-display text-[20px] mb-1">Biorrefinaria integrada</div>
+              <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Um único fruto alimenta oito cadeias: combustível, ração, química, materiais, cosméticos, siderurgia, carbono e energia.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <span class="font-mono text-[11px] text-[var(--amber)] mt-1">04</span>
+            <div>
+              <div class="font-display text-[20px] mb-1">Sequestro de carbono</div>
+              <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">≈ 20 tCO₂/ha/ano (Imaflora). Em 100 M ha: estoque agrícola certificável em escala continental — receita paralela sem produto adicional.</p>
+            </div>
+          </div>
+          <div class="flex gap-4">
+            <span class="font-mono text-[11px] text-[var(--amber)] mt-1">05</span>
+            <div>
+              <div class="font-display text-[20px] mb-1">50 anos de produção</div>
+              <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">Palmeira perene com retorno a partir do 3º ano. Um plantio, décadas de geração de valor — infraestrutura agrícola de longo prazo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-5 border border-[var(--line)] rounded-3xl p-8 bg-[#0a1813]/60">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-6">Produtividade comprovada</div>
+        <div class="space-y-5">
+          <div class="flex justify-between items-end border-b border-[var(--line)] pb-4">
+            <span class="text-[13px] text-[var(--ink-dim)]">Frutos por hectare</span>
+            <span class="font-display text-[22px]">15 t/ha · ano</span>
+          </div>
+          <div class="flex justify-between items-end border-b border-[var(--line)] pb-4">
+            <span class="text-[13px] text-[var(--ink-dim)]">Óleo vegetal</span>
+            <div class="text-right"><div class="font-display text-[22px]">2.500 L/ha</div><div class="font-mono text-[10px] text-[var(--muted)]">5× soja</div></div>
+          </div>
+          <div class="flex justify-between items-end border-b border-[var(--line)] pb-4">
+            <span class="text-[13px] text-[var(--ink-dim)]">Vida útil produtiva</span>
+            <span class="font-display text-[22px]">50 anos</span>
+          </div>
+          <div class="flex justify-between items-end">
+            <span class="text-[13px] text-[var(--ink-dim)]">Início de produção</span>
+            <span class="font-display text-[22px]">3º ano</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== BALANÇO + SIMULADOR ============== -->
+<section id="balanco" class="relative py-28 lg:py-36 bg-[#0a1813] border-y border-[#1d3329]">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-10">
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">§ 02 — Balanço Financeiro Consolidado</div>
+        <h2 class="font-display text-[44px] lg:text-[64px] leading-[0.95] tracking-[-0.02em] font-light max-w-3xl">
+          O <em class="italic font-normal">endgame</em> em oito linhas de produto.
+        </h2>
+      </div>
+      <div class="text-right">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-1">Câmbio estrutural</div>
+        <div class="font-display text-[24px]">R$ 5,20 / US$</div>
+      </div>
+    </div>
+
+    <div class="border border-[var(--line)] rounded-3xl p-6 lg:p-8 mb-8 bg-[#07120e]/50 glow-border">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+        <div>
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Simulador de área plantada</div>
+          <div class="flex items-baseline gap-3">
+            <span class="font-display text-[56px] leading-none num-grad" id="simAreaNum">100</span>
+            <span class="font-mono text-[12px] uppercase tracking-[.2em] text-[var(--ink-dim)]">milhões de hectares</span>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)]">Receita no cenário</div>
+          <div class="font-display text-[28px] num-grad" id="simTotalUsd">US$ 923,15 Bi</div>
+          <div class="font-mono text-[12px] text-[var(--ink-dim)]" id="simTotalBrl">≈ R$ 4.800,38 Bi</div>
+        </div>
+      </div>
+      <input type="range" class="sim-slider" id="simSlider" min="1000000" max="100000000" step="1000000" value="100000000" aria-label="Área plantada em hectares">
+      <div class="flex justify-between font-mono text-[10px] uppercase tracking-[.2em] text-[var(--muted)] mt-2 mb-5">
+        <span>1 Mi ha</span><span>50 Mi ha</span><span>100 Mi ha</span>
+      </div>
+      <div class="flex flex-wrap gap-2" id="simPresets">
+        <button type="button" class="preset-btn font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--amber)]" data-valor="1000000">1M ha</button>
+        <button type="button" class="preset-btn font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--amber)]" data-valor="5000000">5M ha</button>
+        <button type="button" class="preset-btn font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--amber)]" data-valor="10000000">10M ha</button>
+        <button type="button" class="preset-btn font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--amber)]" data-valor="25000000">25M ha</button>
+        <button type="button" class="preset-btn font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)] text-[var(--ink-dim)] hover:border-[var(--amber)]" data-valor="50000000">50M ha</button>
+        <button type="button" class="preset-btn ativo font-mono text-[11px] uppercase tracking-[.15em] px-3 py-1.5 rounded-full border border-[var(--line)]" data-valor="100000000">100M ha</button>
+      </div>
+      <p class="mt-4 text-[12px] text-[var(--muted)]">Escalonamento linear a preços conservadores (jun/2026). HVO a US$ 0,85/L — desconto de 51% sobre a referência europeia; SAF a US$ 1,10/L — 57% abaixo da média EUA. Curvas reais de maturação e capacidade industrial não entram neste modelo.</p>
+    </div>
+
+    <div class="border border-[var(--line)] rounded-3xl overflow-hidden glow-border bg-[#07120e]/60">
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[860px]">
+          <thead>
+            <tr class="border-b border-[var(--line)] bg-[#0c1d16]">
+              <th class="text-left font-mono text-[10px] uppercase tracking-[.25em] text-[var(--muted)] py-5 px-6 font-medium">Linha de Produto</th>
+              <th class="text-right font-mono text-[10px] uppercase tracking-[.25em] text-[var(--muted)] py-5 px-6 font-medium">Volume Anual</th>
+              <th class="text-right font-mono text-[10px] uppercase tracking-[.25em] text-[var(--muted)] py-5 px-6 font-medium">Preço Médio (USD)</th>
+              <th class="text-right font-mono text-[10px] uppercase tracking-[.25em] text-[var(--muted)] py-5 px-6 font-medium">Receita Anual</th>
+              <th class="text-right font-mono text-[10px] uppercase tracking-[.25em] text-[var(--muted)] py-5 px-6 font-medium w-32">Participação</th>
+            </tr>
+          </thead>
+          <tbody class="font-display text-[18px]" id="balancoBody">
+            <tr class="border-b border-[#152620]" data-id="hvo">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[var(--amber)]"></span>
+                  <div>
+                    <div>HVO <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Diesel Verde</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Renewable Diesel · drop-in</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">525 Bi L</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 0,85 / L</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 446,25 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[var(--amber)]" data-w="100"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">48,3%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="saf">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[var(--rust)]"></span>
+                  <div>
+                    <div>SAF <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Jet Fuel</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">ASTM D7566 · HEFA</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">75 Bi L</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 1,10 / L</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 82,50 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[var(--rust)]" data-w="18"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">8,9%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="farelo">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[var(--leaf-bright)]"></span>
+                  <div>
+                    <div>Farelo / Torta <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Nutrição Animal</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Protein Meal</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">1,2 Bi t</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 180 / t</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 216,00 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[var(--leaf-bright)]" data-w="48"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">23,4%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="laurico">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[var(--biofuel)]"></span>
+                  <div>
+                    <div>Ácido Láurico <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Química Fina</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Lauric Acid</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">62 Mi t</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 1.200 / t</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 74,40 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[var(--biofuel)]" data-w="17"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">8,1%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="glp">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[#8a6cb8]"></span>
+                  <div>
+                    <div>GLP Verde <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Propano</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Bio-Propane</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">50 Mi t</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 550 / t</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 27,50 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[#8a6cb8]" data-w="6"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">3,0%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="fibras">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[#5fa37a]"></span>
+                  <div>
+                    <div>Fibras <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Epicarpo / Materiais</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Lignocellulosic Fiber</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">300 Mi t</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 80 / t</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 24,00 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[#5fa37a]" data-w="5"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">2,6%</span>
+                </div>
+              </td>
+            </tr>
+            <tr class="border-b border-[#152620]" data-id="glicerina">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[#c87f4a]"></span>
+                  <div>
+                    <div>Glicerina Bruta <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Insumos</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">Crude Glycerin</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">50 Mi t</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">$ 250 / t</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 12,50 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[#c87f4a]" data-w="3"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">1,4%</span>
+                </div>
+              </td>
+            </tr>
+            <tr data-id="biomassa">
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-3">
+                  <span class="w-2 h-2 rounded-full bg-[var(--muted)]"></span>
+                  <div>
+                    <div>Biomassa Residual <span class="text-[var(--ink-dim)] text-[14px] font-sans">· Créditos de Carbono</span></div>
+                    <div class="text-[11px] font-mono text-[var(--muted)] uppercase tracking-wider">20 tCO₂/ha · US$ 15/tCO₂</div>
+                  </div>
+                </div>
+              </td>
+              <td class="js-vol py-5 px-6 text-right font-mono text-[15px]">Variável</td>
+              <td class="py-5 px-6 text-right font-mono text-[15px] text-[var(--ink-dim)]">—</td>
+              <td class="js-rev py-5 px-6 text-right num-grad font-semibold">US$ 40,00 Bi</td>
+              <td class="py-5 px-6">
+                <div class="flex items-center gap-2 justify-end">
+                  <div class="w-20 h-1 bg-[#1d3329] rounded-full overflow-hidden">
+                    <div class="bar-fill h-full bg-[var(--muted)]" data-w="9"></div>
+                  </div>
+                  <span class="font-mono text-[11px] text-[var(--ink-dim)]">4,3%</span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="bg-gradient-to-r from-[#1a2e22] to-[#0c1d16] border-t-2 border-[var(--amber)]">
+              <td class="py-7 px-6 font-display text-[20px]" colspan="3">
+                <span class="text-[var(--amber)]">TOTAL BRUTO ANUAL</span> <span class="text-[var(--ink-dim)] text-[14px] font-sans">· consolidated gross value</span>
+              </td>
+              <td class="js-total py-7 px-6 text-right font-display text-[28px] num-grad font-bold">US$ 923,15 Bi</td>
+              <td class="py-7 px-6 text-right font-mono text-[14px] text-[var(--ink-dim)]">100%</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-10">
+      <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/40">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Receita em Reais</div>
+        <div class="font-display text-[28px] num-grad font-semibold" id="kpiBrl">R$ 4,80 Trilhões</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-2">Aprox. 45% do PIB brasileiro atual no cenário de 100 M ha — novo teto industrial.</p>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/40">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Por Hectare / Ano</div>
+        <div class="font-display text-[28px] num-grad font-semibold">US$ 9.231 / ha</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-2">11× o pasto degradado (~US$ 800/ha). Densidade perene e de baixo insumo.</p>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/40">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">vs. Petrobras 2024</div>
+        <div class="font-display text-[28px] num-grad font-semibold">8,4×</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-2">Receita bruta no endgame maior que toda a Petrobras.</p>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-7 bg-[#0c1d16]/40">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Linha de Maior Peso</div>
+        <div class="font-display text-[28px] num-grad font-semibold">HVO · 48,3%</div>
+        <p class="text-[13px] text-[var(--ink-dim)] mt-2">Diesel verde âncora comercial de toda a plataforma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== EIXOS SETORIAIS ============== -->
+<section id="eixos" class="relative py-28 lg:py-40 grain">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl mb-16">
+      <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">§ 03 — Eixos de Disrupção Setorial</div>
+      <h2 class="font-display text-[44px] lg:text-[68px] leading-[0.95] tracking-[-0.02em] font-light">
+        Não é apenas combustível. É <em class="italic font-normal">alimento, aço</em> e <em class="italic font-normal">manufatura avançada</em>.
+      </h2>
+    </div>
+
+    <div class="border border-[var(--line)] rounded-3xl overflow-hidden mb-12 bg-[#0a1813]/50">
+      <div class="grid lg:grid-cols-12">
+        <div class="lg:col-span-4 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-[var(--line)] bg-gradient-to-br from-[#0c1d16] to-[#07120e]">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--amber)]">Eixo 01 · Segurança Soberana</span>
+          </div>
+          <h3 class="font-display text-[36px] leading-[1] mb-4">Alimentos e insumos</h3>
+          <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">O calcanhar de Aquiles da inflação interna e da vulnerabilidade geopolítica — resolvido na entrelinha do plantio.</p>
+          <div class="mt-8 space-y-3">
+            <div class="flex justify-between text-[12px] font-mono"><span class="text-[var(--muted)]">Farelo</span><span>1,2 Bi t</span></div>
+            <div class="flex justify-between text-[12px] font-mono"><span class="text-[var(--muted)]">Glicerina</span><span>50 Mi t</span></div>
+          </div>
+        </div>
+        <div class="lg:col-span-8 p-8 lg:p-12 space-y-10">
+          <article>
+            <div class="flex items-baseline justify-between mb-3 gap-4 flex-wrap">
+              <h4 class="font-display text-[26px]">Farelo · 1,2 Bilhão de toneladas</h4>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--amber)]">Fim do custo de ração</span>
+            </div>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-4">
+              Volume quase <span class="text-[var(--ink)] font-medium">dez vezes superior à produção atual de soja do Brasil</span>. Resolve o calcanhar de Aquiles da pecuária intensiva — o custo da ração indexado ao mercado de commodities.
+            </p>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed">
+              O farelo disponível na entrelinha do próprio plantio cria um ciclo de custo marginal próximo a zero para carne bovina, suína e aves, <span class="text-[var(--ink)] font-medium">blindando a inflação de alimentos interna</span>.
+            </p>
+          </article>
+          <div class="h-px bg-[var(--line)]"></div>
+          <article>
+            <div class="flex items-baseline justify-between mb-3 gap-4 flex-wrap">
+              <h4 class="font-display text-[26px]">Glicerina Bruta · 50 Mi t</h4>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--amber)]">Vetor para biofertilizantes</span>
+            </div>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-4">
+              A dependência brasileira da importação de <span class="text-[var(--ink)] font-medium">NPK (Nitrogênio, Fósforo e Potássio)</span> é uma vulnerabilidade geopolítica clássica.
+            </p>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed">
+              O excedente massivo de glicerina como base de carbono orgânico para biofertilizantes nacionais e quelantes de solo <span class="text-[var(--ink)] font-medium">quebra parte dessa dependência</span>, aumentando a retenção de nutrientes no Cerrado.
+            </p>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="border border-[var(--line)] rounded-3xl overflow-hidden bg-[#0a1813]/50">
+      <div class="grid lg:grid-cols-12">
+        <div class="lg:col-span-4 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-[var(--line)] bg-gradient-to-br from-[#0c1d16] to-[#07120e]">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--amber)]">Eixo 02 · Descarbonização Industrial</span>
+          </div>
+          <h3 class="font-display text-[36px] leading-[1] mb-4">Aço e manufatura</h3>
+          <p class="text-[14px] text-[var(--ink-dim)] leading-relaxed">O Brasil passa de fornecedor de matéria-prima a definidor do preço global do Aço Verde.</p>
+          <div class="mt-8 space-y-3">
+            <div class="flex justify-between text-[12px] font-mono"><span class="text-[var(--muted)]">Endocarpo</span><span>480 Mi t</span></div>
+            <div class="flex justify-between text-[12px] font-mono"><span class="text-[var(--muted)]">Fibras</span><span>300 Mi t</span></div>
+          </div>
+        </div>
+        <div class="lg:col-span-8 p-8 lg:p-12 space-y-10">
+          <article>
+            <div class="flex items-baseline justify-between mb-3 gap-4 flex-wrap">
+              <h4 class="font-display text-[26px]">Endocarpo · 480 Mi t · Aço Verde</h4>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--amber)]">Substituto do coque metalúrgico</span>
+            </div>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-4">
+              A siderurgia global enfrenta pressão severa para eliminar o carvão mineral. O endocarpo da Macaúba possui <span class="text-[var(--ink)] font-medium">alta densidade energética e baixo teor de cinzas</span> — substituto perfeito para o coque metalúrgico.
+            </p>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed">
+              Com quase 500 milhões de toneladas, o Brasil não apenas descarbonizaria sua própria produção de aço, mas passaria a <span class="text-[var(--ink)] font-medium">ditar o preço do Aço Verde Premium</span> no mercado europeu e asiático.
+            </p>
+          </article>
+          <div class="h-px bg-[var(--line)]"></div>
+          <article>
+            <div class="flex items-baseline justify-between mb-3 gap-4 flex-wrap">
+              <h4 class="font-display text-[26px]">Fibras do Epicarpo · 300 Mi t</h4>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--amber)]">Engenharia de materiais</span>
+            </div>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-4">
+              A casca externa é rica em <span class="text-[var(--ink)] font-medium">fibras lignocelulósicas de alta resistência mecânica</span>. Em vez de queima simples, o direcionamento para biocompósitos substitui a fibra de vidro.
+            </p>
+            <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed">
+              Autopeças e painéis estruturais para construção civil sustentável <span class="text-[var(--ink)] font-medium">ancoram uma nova cadeia de manufatura leve e de baixo carbono</span> no país.
+            </p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CADEIA / MASS BALANCE ============== -->
+<section id="cadeia" class="relative py-28 lg:py-36 bg-[#0a1813] border-y border-[#1d3329] overflow-hidden">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 mb-16">
+      <div class="lg:col-span-5">
+        <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">§ 04 — Balanço de Massa</div>
+        <h2 class="font-display text-[44px] lg:text-[64px] leading-[0.95] tracking-[-0.02em] font-light">
+          Um fruto. <em class="italic font-normal">Cinco destinos</em> industriais.
+        </h2>
+      </div>
+      <div class="lg:col-span-7 lg:pt-6">
+        <p class="text-[17px] text-[var(--ink-dim)] leading-relaxed">
+          1,2 bilhão de toneladas de frutos por ano no endgame. A casca domina a massa; a amêndoa concentra valor de química fina. Cada componente é endereçado a uma cadeia distinta — zero resíduo líquido.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid sm:grid-cols-3 gap-4 mb-14">
+      <div class="border border-[var(--line)] rounded-2xl p-6 bg-[#07120e]/50">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Casca · Epicarpo</div>
+        <div class="font-display text-[48px] leading-none mt-2 num-grad">50<sup class="text-[20px]">%</sup></div>
+        <div class="text-[14px] text-[var(--ink-dim)] mt-2">600 mi t / ano · fibras, carvão, biochar</div>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-6 bg-[#07120e]/50">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Polpa · Mesocarpo</div>
+        <div class="font-display text-[48px] leading-none mt-2 num-grad">35<sup class="text-[20px]">%</sup></div>
+        <div class="text-[14px] text-[var(--ink-dim)] mt-2">420 mi t / ano · óleo para HVO / SAF</div>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-6 bg-[#07120e]/50">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Amêndoa · Endosperma</div>
+        <div class="font-display text-[48px] leading-none mt-2 num-grad">15<sup class="text-[20px]">%</sup></div>
+        <div class="text-[14px] text-[var(--ink-dim)] mt-2">180 mi t / ano · láurico e torta proteica</div>
+      </div>
+    </div>
+    <div class="h-3 rounded-full overflow-hidden flex mb-16 border border-[var(--line)]">
+      <div class="bg-[#5fa37a]" style="width:50%" title="Casca 50%"></div>
+      <div class="bg-[var(--amber)]" style="width:35%" title="Polpa 35%"></div>
+      <div class="bg-[var(--rust)]" style="width:15%" title="Amêndoa 15%"></div>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-12 items-center">
+      <div class="lg:col-span-6 flex justify-center">
+        <div class="relative w-full max-w-[520px] aspect-square">
+          <svg viewBox="0 0 500 500" class="w-full h-full">
+            <g class="cycle-rot">
+              <circle cx="250" cy="250" r="220" fill="none" stroke="#1d3329" stroke-width="1" stroke-dasharray="2 6"/>
+              <circle cx="250" cy="250" r="200" fill="none" stroke="#1d3329" stroke-width="1"/>
+            </g>
+            <circle cx="250" cy="250" r="140" fill="none" stroke="#e6b43c" stroke-width="0.8" stroke-dasharray="4 4" opacity=".4"/>
+            <circle cx="250" cy="250" r="70" fill="#0c1d16" stroke="#e6b43c" stroke-width="1.5"/>
+            <text x="250" y="240" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="20" font-style="italic">Macaúba</text>
+            <text x="250" y="262" text-anchor="middle" fill="#e6b43c" font-family="JetBrains Mono" font-size="9" letter-spacing="2">100M HA</text>
+            <g>
+              <line x1="250" y1="180" x2="250" y2="60" stroke="#5fa37a" stroke-width="1" opacity=".5"/>
+              <circle cx="250" cy="50" r="38" fill="#0c1d16" stroke="#5fa37a" stroke-width="1.5"/>
+              <text x="250" y="46" text-anchor="middle" fill="#7ec488" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">EPICARPO</text>
+              <text x="250" y="60" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="13">Fibras</text>
+              <text x="250" y="92" text-anchor="middle" fill="#b8b0a0" font-family="JetBrains Mono" font-size="10">300 Mi t</text>
+            </g>
+            <g>
+              <line x1="310" y1="220" x2="420" y2="180" stroke="#e6b43c" stroke-width="1" opacity=".5"/>
+              <circle cx="440" cy="170" r="38" fill="#0c1d16" stroke="#e6b43c" stroke-width="1.5"/>
+              <text x="440" y="166" text-anchor="middle" fill="#e6b43c" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">MESOCARPO</text>
+              <text x="440" y="180" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="13">Óleo</text>
+              <text x="440" y="212" text-anchor="middle" fill="#b8b0a0" font-family="JetBrains Mono" font-size="10">HVO + SAF</text>
+            </g>
+            <g>
+              <line x1="305" y1="305" x2="395" y2="365" stroke="#c0612b" stroke-width="1" opacity=".5"/>
+              <circle cx="412" cy="378" r="38" fill="#0c1d16" stroke="#c0612b" stroke-width="1.5"/>
+              <text x="412" y="374" text-anchor="middle" fill="#c0612b" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">ENDOCARPO</text>
+              <text x="412" y="388" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="13">Biochar</text>
+              <text x="412" y="420" text-anchor="middle" fill="#b8b0a0" font-family="JetBrains Mono" font-size="10">480 Mi t</text>
+            </g>
+            <g>
+              <line x1="195" y1="305" x2="105" y2="365" stroke="#d8c23a" stroke-width="1" opacity=".5"/>
+              <circle cx="88" cy="378" r="38" fill="#0c1d16" stroke="#d8c23a" stroke-width="1.5"/>
+              <text x="88" y="374" text-anchor="middle" fill="#d8c23a" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">AMÊNDOA</text>
+              <text x="88" y="388" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="13">Ác. Láurico</text>
+              <text x="88" y="420" text-anchor="middle" fill="#b8b0a0" font-family="JetBrains Mono" font-size="10">62 Mi t</text>
+            </g>
+            <g>
+              <line x1="190" y1="220" x2="80" y2="180" stroke="#7ec488" stroke-width="1" opacity=".5"/>
+              <circle cx="60" cy="170" r="38" fill="#0c1d16" stroke="#7ec488" stroke-width="1.5"/>
+              <text x="60" y="166" text-anchor="middle" fill="#7ec488" font-family="JetBrains Mono" font-size="8" letter-spacing="1.5">TORTA</text>
+              <text x="60" y="180" text-anchor="middle" fill="#f3ede0" font-family="Fraunces" font-size="13">Farelo</text>
+              <text x="60" y="212" text-anchor="middle" fill="#b8b0a0" font-family="JetBrains Mono" font-size="10">1,2 Bi t</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <div class="lg:col-span-6 space-y-6">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-5 border border-[var(--line)] rounded-2xl bg-[#07120e]/50">
+            <div class="w-3 h-3 rounded-full bg-[#5fa37a] mb-3"></div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Epicarpo</div>
+            <div class="font-display text-[20px] mb-1">Fibras</div>
+            <div class="text-[12px] text-[var(--ink-dim)]">Biocompósitos · painéis estruturais · substituição de fibra de vidro</div>
+          </div>
+          <div class="p-5 border border-[var(--line)] rounded-2xl bg-[#07120e]/50">
+            <div class="w-3 h-3 rounded-full bg-[var(--amber)] mb-3"></div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Mesocarpo</div>
+            <div class="font-display text-[20px] mb-1">Óleo Bruto</div>
+            <div class="text-[12px] text-[var(--ink-dim)]">Hidrotratamento HEFA → HVO + SAF + GLP verde</div>
+          </div>
+          <div class="p-5 border border-[var(--line)] rounded-2xl bg-[#07120e]/50">
+            <div class="w-3 h-3 rounded-full bg-[var(--rust)] mb-3"></div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Endocarpo</div>
+            <div class="font-display text-[20px] mb-1">Biochar / Coque</div>
+            <div class="text-[12px] text-[var(--ink-dim)]">Redutor siderúrgico para aço verde · créditos de carbono</div>
+          </div>
+          <div class="p-5 border border-[var(--line)] rounded-2xl bg-[#07120e]/50">
+            <div class="w-3 h-3 rounded-full bg-[var(--biofuel)] mb-3"></div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Amêndoa</div>
+            <div class="font-display text-[20px] mb-1">Ácido Láurico</div>
+            <div class="text-[12px] text-[var(--ink-dim)]">Química fina · cosméticos · tensoativos · glicerina</div>
+          </div>
+          <div class="p-5 border border-[var(--line)] rounded-2xl bg-[#07120e]/50 sm:col-span-2">
+            <div class="w-3 h-3 rounded-full bg-[var(--leaf-bright)] mb-3"></div>
+            <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Torta Prensada</div>
+            <div class="font-display text-[20px] mb-1">Farelo Proteico · 1,2 Bi t</div>
+            <div class="text-[12px] text-[var(--ink-dim)]">Nutrição animal bovina, suína e avícola · custo marginal de ração próximo de zero</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CATÁLOGO ============== -->
+<section id="catalogo" class="relative py-28 lg:py-36 grain">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-14">
+      <div>
+        <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">§ 05 — Catálogo de Subprodutos</div>
+        <h2 class="font-display text-[44px] lg:text-[64px] leading-[0.95] tracking-[-0.02em] font-light max-w-3xl">
+          Cada <em class="italic font-normal">fração</em> tem um mercado.
+        </h2>
+      </div>
+      <div class="font-mono text-[11px] uppercase tracking-[.25em] text-[var(--ink-dim)] max-w-xs">
+        Clique em ⓘ para abrir aplicações, vantagem e mercado. Oito correntes. Zero resíduo líquido.
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5" id="catalogGrid"></div>
+  </div>
+</section>
+
+<!-- ============== HORIZONTE ============== -->
+<section id="horizonte" class="relative py-28 lg:py-36 bg-[#0a1813] border-y border-[#1d3329]">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="max-w-3xl mb-16">
+      <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">Horizonte · Adoção e comparativo</div>
+      <h2 class="font-display text-[44px] lg:text-[64px] leading-[0.95] tracking-[-0.02em] font-light">
+        Três décadas até os <em class="italic font-normal">cem milhões</em>.
+      </h2>
+      <p class="mt-6 text-[17px] text-[var(--ink-dim)] leading-relaxed">A macaúba alcança o patamar do dendê sem pressionar a Amazônia. A curva de área é sequencial: viveirismo, biorrefinarias, ILPF, potencial máximo.</p>
+    </div>
+
+    <div class="mb-20">
+      <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-6">Óleo · litros / hectare · ano</div>
+      <div class="space-y-6">
+        <div class="grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-3 font-display text-[18px] text-[var(--amber)]">Macaúba</div>
+          <div class="col-span-6"><div class="prod-track"><div class="prod-bar" style="left:18.75%;width:43.75%"></div></div></div>
+          <div class="col-span-3 font-mono text-[12px] text-[var(--ink-dim)]">1.500 – 5.000 L<br><span class="text-[var(--muted)]">Rústica, sem expansão sobre florestas.</span></div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-3 font-display text-[18px]">Dendê</div>
+          <div class="col-span-6"><div class="prod-track"><div class="prod-bar bg-[var(--leaf)]" style="left:43.75%;width:37.5%"></div></div></div>
+          <div class="col-span-3 font-mono text-[12px] text-[var(--ink-dim)]">3.500 – 6.500 L<br><span class="text-[var(--muted)]">Exige clima úmido equatorial.</span></div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-3 font-display text-[18px]">Girassol</div>
+          <div class="col-span-6"><div class="prod-track"><div class="prod-bar bg-[var(--muted)]" style="left:6.25%;width:8.75%"></div></div></div>
+          <div class="col-span-3 font-mono text-[12px] text-[var(--ink-dim)]">500 – 1.200 L<br><span class="text-[var(--muted)]">Cultura anual.</span></div>
+        </div>
+        <div class="grid grid-cols-12 gap-4 items-center">
+          <div class="col-span-3 font-display text-[18px]">Soja</div>
+          <div class="col-span-6"><div class="prod-track"><div class="prod-bar bg-[#524a3d]" style="left:5.6%;width:2.5%"></div></div></div>
+          <div class="col-span-3 font-mono text-[12px] text-[var(--ink-dim)]">450 – 650 L<br><span class="text-[var(--muted)]">Tensão com segurança alimentar.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-6 mb-16">
+      <div class="border border-[var(--line)] rounded-2xl p-6">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--amber)] mb-2">Ano 0 — 5</div>
+        <div class="font-display text-[28px] mb-1">0,5 M ha</div>
+        <div class="text-[14px] font-medium mb-2">Viveirismo + pesquisa</div>
+        <p class="text-[13px] text-[var(--ink-dim)]">Seleção de matrizes, mudas melhoradas e pacotes tecnológicos.</p>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-6">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--amber)] mb-2">Ano 5 — 10</div>
+        <div class="font-display text-[28px] mb-1">8 M ha</div>
+        <div class="text-[14px] font-medium mb-2">Plantio + biorrefinarias</div>
+        <p class="text-[13px] text-[var(--ink-dim)]">Primeiros plantios em escala e instalação das plantas HEFA.</p>
+      </div>
+      <div class="border border-[var(--line)] rounded-2xl p-6">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--amber)] mb-2">Ano 10 — 20</div>
+        <div class="font-display text-[28px] mb-1">40 M ha</div>
+        <div class="text-[14px] font-medium mb-2">Expansão · SAF</div>
+        <p class="text-[13px] text-[var(--ink-dim)]">ILPF em larga escala sobre pastagens degradadas.</p>
+      </div>
+      <div class="border border-[var(--amber)]/40 rounded-2xl p-6 bg-[#0c1d16]/60">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--amber)] mb-2">Ano 20 — 30</div>
+        <div class="font-display text-[28px] mb-1 num-grad">100 M ha</div>
+        <div class="text-[14px] font-medium mb-2">Potencial máximo</div>
+        <p class="text-[13px] text-[var(--ink-dim)]">Cobertura plena das pastagens degradadas — cenário 2035+.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-6">Da pastagem degradada ao ativo produtivo</div>
+      <div class="grid sm:grid-cols-5 gap-4">
+        <div class="border border-[var(--line)] rounded-2xl p-5">
+          <div class="font-mono text-[10px] text-[var(--amber)] mb-3">01</div>
+          <div class="font-display text-[18px] mb-2">Recupera áreas</div>
+          <p class="text-[12px] text-[var(--ink-dim)]">109,7 M ha de pastagens degradadas viram ativo produtivo.</p>
+        </div>
+        <div class="border border-[var(--line)] rounded-2xl p-5">
+          <div class="font-mono text-[10px] text-[var(--amber)] mb-3">02</div>
+          <div class="font-display text-[18px] mb-2">Produz 50 anos</div>
+          <p class="text-[12px] text-[var(--ink-dim)]">15 t de frutos/ha/ano a partir do 3º ano. Sem replantio.</p>
+        </div>
+        <div class="border border-[var(--line)] rounded-2xl p-5">
+          <div class="font-mono text-[10px] text-[var(--amber)] mb-3">03</div>
+          <div class="font-display text-[18px] mb-2">Biorrefinaria</div>
+          <p class="text-[12px] text-[var(--ink-dim)]">Oito produtos simultâneos: combustível, ração, química, carbono.</p>
+        </div>
+        <div class="border border-[var(--line)] rounded-2xl p-5">
+          <div class="font-mono text-[10px] text-[var(--amber)] mb-3">04</div>
+          <div class="font-display text-[18px] mb-2">Renda e emprego</div>
+          <p class="text-[12px] text-[var(--ink-dim)]">US$ 9.231/ha/ano — 11× o pasto degradado atual.</p>
+        </div>
+        <div class="border border-[var(--line)] rounded-2xl p-5">
+          <div class="font-mono text-[10px] text-[var(--amber)] mb-3">05</div>
+          <div class="font-display text-[18px] mb-2">Sequestra C</div>
+          <p class="text-[12px] text-[var(--ink-dim)]">20 tCO₂/ha/ano. Em 100 M ha, estoque agrícola de escala mundial.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRAGMÁTICA ============== -->
+<section id="pragmatica" class="relative py-28 lg:py-36 grain">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-12 mb-16">
+      <div class="lg:col-span-5">
+        <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-4">§ 06 — Pragmática de Mercado</div>
+        <h2 class="font-display text-[44px] lg:text-[64px] leading-[0.95] tracking-[-0.02em] font-light">
+          Como a <em class="italic font-normal">máquina verde</em> opera de forma estável.
+        </h2>
+      </div>
+      <div class="lg:col-span-7 lg:pt-6">
+        <p class="text-[17px] text-[var(--ink-dim)] leading-relaxed">
+          Para que essa matriz funcione, o desenho regulatório e comercial precisa prever dois mecanismos de defesa de mercado — sem os quais a plataforma captura valor apenas parcialmente. Ambos são estruturais, não conjunturais.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <div class="relative border border-[var(--line)] rounded-3xl p-8 lg:p-10 bg-[#07120e]/60 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--amber)] to-transparent"></div>
+        <div class="flex items-baseline gap-4 mb-6">
+          <span class="font-display text-[72px] leading-none text-[var(--line)]">01</span>
+          <div>
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--amber)] mb-1">Mecanismo de defesa</div>
+            <h3 class="font-display text-[28px] leading-tight">Hedge de Elasticidade de Preço</h3>
+          </div>
+        </div>
+        <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-6">
+          A entrada de <span class="text-[var(--ink)] font-medium">62 milhões de toneladas de Ácido Láurico</span> e <span class="text-[var(--ink)] font-medium">1,2 bilhão de toneladas de farelo</span> causaria deflação imediata nessas commodities.
+        </p>
+        <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-6">
+          O modelo assume que o custo de produção agrícola da Macaúba é tão baixo que, mesmo com a queda dos preços internacionais pela abundância de oferta, as margens industriais integradas continuariam protegidas.
+        </p>
+        <div class="inline-flex items-center gap-2 px-4 py-2 border border-[var(--amber)]/40 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--amber)]"></span>
+          <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--amber)]">Efeito Low-Cost Producer</span>
+        </div>
+      </div>
+      <div class="relative border border-[var(--line)] rounded-3xl p-8 lg:p-10 bg-[#07120e]/60 overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--leaf-bright)] to-transparent"></div>
+        <div class="flex items-baseline gap-4 mb-6">
+          <span class="font-display text-[72px] leading-none text-[var(--line)]">02</span>
+          <div>
+            <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--leaf-bright)] mb-1">Mecanismo de defesa</div>
+            <h3 class="font-display text-[28px] leading-tight">Internalização do Refino</h3>
+          </div>
+        </div>
+        <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-6">
+          O Brasil não pode cometer o erro histórico de exportar o óleo bruto de Macaúba para ser hidrotratado na Europa ou nos EUA.
+        </p>
+        <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-6">
+          O valor político e econômico está na <span class="text-[var(--ink)] font-medium">retensão das plantas HEFA e de eletrólise de H₂V</span> em território nacional, garantindo que o prêmio ambiental da descarbonização seja capturado pelo PIB doméstico.
+        </p>
+        <div class="inline-flex items-center gap-2 px-4 py-2 border border-[var(--leaf-bright)]/40 rounded-full">
+          <span class="w-1.5 h-1.5 rounded-full bg-[var(--leaf-bright)]"></span>
+          <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--leaf-bright)]">HEFA + H₂V em Solo Brasileiro</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FINALE ============== -->
+<section class="relative py-32 lg:py-48 overflow-hidden grain">
+  <div class="absolute inset-0 palm-halo opacity-60"></div>
+  <div class="absolute inset-0 pointer-events-none">
+    <div class="drop absolute left-[15%] top-0 w-[2px] h-20 bg-gradient-to-b from-transparent via-[var(--amber)] to-[var(--amber-bright)] rounded-full"></div>
+    <div class="drop absolute left-[35%] top-0 w-[2px] h-16 bg-gradient-to-b from-transparent via-[var(--biofuel)] to-[var(--amber-bright)] rounded-full" style="animation-delay:1.5s"></div>
+    <div class="drop absolute left-[60%] top-0 w-[2px] h-24 bg-gradient-to-b from-transparent via-[var(--amber)] to-[var(--rust)] rounded-full" style="animation-delay:.8s"></div>
+    <div class="drop absolute left-[80%] top-0 w-[2px] h-14 bg-gradient-to-b from-transparent via-[var(--biofuel)] to-[var(--amber-bright)] rounded-full" style="animation-delay:2.2s"></div>
+  </div>
+
+  <div class="relative max-w-[1400px] mx-auto px-6 lg:px-10 text-center">
+    <div class="font-mono text-[11px] uppercase tracking-[.35em] text-[var(--amber)] mb-8">§ 07 — O Novo Teto Industrial Brasileiro</div>
+    <h2 class="font-display font-light leading-[0.85] tracking-[-0.04em] text-[60px] sm:text-[96px] lg:text-[140px] xl:text-[176px]">
+      <span class="block">R$ 4,80</span>
+      <span class="block italic num-grad font-semibold" style="font-variation-settings:'opsz' 144, 'SOFT' 100;">Trilhões</span>
+      <span class="block text-[var(--ink-dim)] text-[40%]">por ano.</span>
+    </h2>
+    <p class="mt-12 max-w-3xl mx-auto text-[18px] lg:text-[20px] text-[var(--ink-dim)] leading-relaxed">
+      Em cem milhões de hectares, a Macaúba deixa de ser uma cultura agrícola e se torna a maior refinaria integrada do planeta. Não é uma projeção de commodity — é o desenho de uma nova geografia industrial para o Brasil.
+    </p>
+    <div class="mt-16 flex flex-wrap items-center justify-center gap-4">
+      <a href="#plataforma" class="group inline-flex items-center gap-3 px-7 py-4 rounded-full bg-[var(--amber)] text-[var(--bg)] font-mono text-[12px] uppercase tracking-[.2em] font-semibold hover:bg-[var(--amber-bright)] transition-colors">
+        Relevar o Dossiê
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="group-hover:translate-x-1 transition-transform"><path d="M5 12 L19 12 M13 6 L19 12 L13 18" stroke="currentColor" stroke-width="2"/></svg>
+      </a>
+      <a href="#balanco" class="inline-flex items-center gap-3 px-7 py-4 rounded-full border border-[var(--line)] text-[var(--ink)] font-mono text-[12px] uppercase tracking-[.2em] hover:border-[var(--amber)] transition-colors">
+        Simular o Balanço
+      </a>
+    </div>
+    <div class="mt-20 pt-10 border-t border-[var(--line)] grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Escopo Agrícola</div>
+        <div class="font-display text-[24px]">100 Mi ha</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Linhas de Receita</div>
+        <div class="font-display text-[24px]">08</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Câmbio Estrutural</div>
+        <div class="font-display text-[24px]">R$ 5,20</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-2">Receita Bruta USD</div>
+        <div class="font-display text-[24px] num-grad">923,15 Bi</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer class="relative border-t border-[var(--line)] bg-[#050d0a] py-16">
+  <div class="max-w-[1400px] mx-auto px-6 lg:px-10">
+    <div class="grid lg:grid-cols-12 gap-10 mb-12">
+      <div class="lg:col-span-4">
+        <div class="flex items-center gap-3 mb-6">
+          <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+            <path d="M20 4 C 28 8, 32 14, 32 22 C 32 30, 26 36, 20 36 C 14 36, 8 30, 8 22 C 8 14, 12 8, 20 4 Z" stroke="#e6b43c" stroke-width="1.2" fill="none"/>
+            <circle cx="20" cy="22" r="4" fill="#e6b43c"/>
+            <path d="M20 36 L 20 39" stroke="#e6b43c" stroke-width="1.2"/>
+          </svg>
+          <div>
+            <div class="font-display text-[20px]">Macaúba</div>
+            <div class="font-mono text-[9px] uppercase tracking-[.25em] text-[var(--muted)]">Plataforma de Soberania Tecnológica e Energética</div>
+          </div>
+        </div>
+        <p class="text-[13px] text-[var(--ink-dim)] leading-relaxed max-w-md">
+          Dossiê unificado sobre o potencial econômico de 100 milhões de hectares de Macaúba integrada à refinaria nacional. Conceito estratégico, não prospecto comercial.
+        </p>
+      </div>
+      <div class="lg:col-span-2">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-4">Seções</div>
+        <ul class="space-y-2 text-[13px] text-[var(--ink-dim)]">
+          <li><a class="u-anim" href="#plataforma">A Plataforma</a></li>
+          <li><a class="u-anim" href="#balanco">Balanço + Simulador</a></li>
+          <li><a class="u-anim" href="#eixos">Eixos Setoriais</a></li>
+          <li><a class="u-anim" href="#cadeia">Balanço de Massa</a></li>
+          <li><a class="u-anim" href="#horizonte">Horizonte</a></li>
+          <li><a class="u-anim" href="#pragmatica">Pragmática</a></li>
+        </ul>
+      </div>
+      <div class="lg:col-span-3">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-4">Metodologia</div>
+        <p class="text-[13px] text-[var(--ink-dim)] leading-relaxed">
+          Parâmetros de Embrapa Cerrados, UFV, Embrapa Agroenergia, MAPA, Acelen, Imaflora, S&amp;P Global Platts e IATA, com projeções para o horizonte 2035+ (cenário otimista). Pressupõe mudas melhoradas, colheita mecanizada, marco regulatório e logística adequada.
+        </p>
+      </div>
+      <div class="lg:col-span-3">
+        <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--muted)] mb-4">Aviso</div>
+        <p class="text-[13px] text-[var(--ink-dim)] leading-relaxed">
+          Cenário hipotético para fins exploratórios. Os valores dependem de variáveis tecnológicas, regulatórias e de mercado. Tecnologias: HEFA · H₂V · pirólise · hidrotratamento. Câmbio estrutural R$ 5,20 / US$.
+        </p>
+      </div>
+    </div>
+    <div class="pt-8 border-t border-[var(--line)] flex flex-col md:flex-row justify-between gap-4 text-[11px] font-mono uppercase tracking-[.25em] text-[var(--muted)]">
+      <div>© 2026 · Dossiê Macaúba · Conceito estratégico</div>
+      <div>Brasil · Cerrado · 100M ha</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="max-w-xl w-full border border-[var(--line)] rounded-3xl bg-[#0c1d16] p-8 relative glow-border" role="dialog" aria-modal="true" aria-labelledby="modalTitulo">
+    <button type="button" id="modalCloseBtn" class="absolute top-5 right-5 font-mono text-[16px] text-[var(--muted)] hover:text-[var(--ink)]" aria-label="Fechar">✕</button>
+    <div class="font-mono text-[10px] uppercase tracking-[.3em] text-[var(--amber)] mb-2" id="modalCategoria">Combustíveis</div>
+    <h3 class="font-display text-[32px] leading-tight mb-1" id="modalTitulo">HVO</h3>
+    <p class="font-mono text-[12px] text-[var(--ink-dim)] mb-6" id="modalSubtitulo">Hydrotreated Vegetable Oil</p>
+    <p class="text-[15px] text-[var(--ink-dim)] leading-relaxed mb-6" id="modalDesc"></p>
+    <div class="space-y-4 text-[14px]">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)] mb-1">Aplicações</div>
+        <p class="text-[var(--ink-dim)]" id="modalAplicacoes"></p>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)] mb-1">Vantagem</div>
+        <p class="text-[var(--ink-dim)]" id="modalVantagem"></p>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)] mb-1">Mercado</div>
+        <p class="text-[var(--ink-dim)]" id="modalMercado"></p>
+      </div>
+    </div>
+    <div class="mt-8 pt-6 border-t border-[var(--line)] flex justify-between gap-6">
+      <div>
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">Preço de referência</div>
+        <div class="font-display text-[20px]" id="modalPreco">$ 0,85 / L</div>
+      </div>
+      <div class="text-right">
+        <div class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]" id="modalReceitaLabel">Receita em 100 Mi ha</div>
+        <div class="font-display text-[20px] num-grad" id="modalReceita">US$ 446,25 Bi</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const c = document.getElementById('field');
+  const ctx = c.getContext('2d');
+  let w, h, particles = [];
+  const COUNT = 60;
+  function resize(){
+    w = c.width = window.innerWidth * devicePixelRatio;
+    h = c.height = window.innerHeight * devicePixelRatio;
+    c.style.width = window.innerWidth + 'px';
+    c.style.height = window.innerHeight + 'px';
+  }
+  function init(){
+    particles = [];
+    for(let i=0;i<COUNT;i++){
+      particles.push({
+        x: Math.random()*w, y: Math.random()*h,
+        r: Math.max(0.5, Math.random()*2.2),
+        vx: (Math.random()-0.5)*0.3,
+        vy: -Math.random()*0.4 - 0.1,
+        a: Math.random()*0.4 + 0.1,
+        hue: Math.random() > 0.5 ? '230,180,60' : '216,194,58'
+      });
+    }
+  }
+  function tick(){
+    ctx.clearRect(0,0,w,h);
+    particles.forEach(p=>{
+      p.x += p.vx * devicePixelRatio;
+      p.y += p.vy * devicePixelRatio;
+      if(p.y < -20){ p.y = h + 10; p.x = Math.random()*w; }
+      if(p.x < -20) p.x = w + 10;
+      if(p.x > w + 20) p.x = -10;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${p.hue}, ${p.a})`;
+      ctx.arc(p.x, p.y, p.r * devicePixelRatio, 0, Math.PI*2);
+      ctx.fill();
+    });
+    requestAnimationFrame(tick);
+  }
+  resize(); init(); tick();
+  window.addEventListener('resize', ()=>{ resize(); init(); });
+})();
+
+(function(){
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  els.forEach(el=>io.observe(el));
+})();
+
+(function(){
+  const bars = document.querySelectorAll('.bar-fill');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const w = e.target.getAttribute('data-w') || 100;
+        e.target.style.transform = `scaleX(${w/100})`;
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  bars.forEach(b=>io.observe(b));
+})();
+
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click', e=>{
+    const id = a.getAttribute('href');
+    if(id.length>1){
+      const el = document.querySelector(id);
+      if(el){
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  });
+});
+
+window.addEventListener('scroll', ()=>{
+  const fill = document.getElementById('progressFill');
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  fill.style.transform = 'scaleX(' + (max > 0 ? window.scrollY / max : 0) + ')';
+}, { passive: true });
+
+(function () {
+  var CAMBIO = 5.20;
+  var MIN_HA = 1000000;
+  var MAX_HA = 100000000;
+  var BASE_HA = 100000000;
+
+  var dados = {
+    hvo: {
+      nome: 'HVO — Diesel Verde', subtitulo: 'Hydrotreated Vegetable Oil', categoria: 'Combustíveis',
+      tag: '01 / Combustível', unit: 'L', volBase: 525, volUnit: 'Bi L', preco: 0.85, revBase: 446.25, color: '#e6b43c',
+      blurb: 'Hidrotratamento de óleos vegetais. Drop-in para a frota diesel existente, sem adaptação de motor.',
+      descricao: 'Obtido pela hidrogenação do óleo vegetal — remove oxigênio da molécula e a torna quimicamente equivalente ao diesel de petróleo. Pode ser usado puro (B100) ou em qualquer proporção, sem adaptação de motor.',
+      aplicacoes: 'Transporte rodoviário pesado, frotas agrícolas, geração estacionária, locomotivas e navegação de cabotagem.',
+      vantagem: 'Reduz até 90% das emissões de CO₂ frente ao diesel fóssil. Compatível com a infraestrutura já existente.',
+      mercado: 'A Europa lidera a demanda via mandatos de mistura. Em escala, o Brasil tem potencial para se tornar o maior exportador global.'
+    },
+    saf: {
+      nome: 'SAF — Jet Fuel Verde', subtitulo: 'Sustainable Aviation Fuel', categoria: 'Aviação',
+      tag: '02 / Aviação', unit: 'L', volBase: 75, volUnit: 'Bi L', preco: 1.10, revBase: 82.50, color: '#c0612b',
+      blurb: 'Querosene de aviação sustentável. Único caminho viável para descarbonizar o transporte aéreo no curto prazo.',
+      descricao: 'Produzido pela rota HEFA, refinado sob especificação ASTM D7566 para turbinas aeronáuticas. Principal caminho tecnicamente viável para descarbonizar a aviação civil no curto e médio prazo.',
+      aplicacoes: 'Aviação comercial e cargueira. Mistura de até 50% ao Jet A-1, sem modificação de motores ou aeronaves.',
+      vantagem: 'Redução de até 80% no ciclo de vida de carbono. Demanda estruturalmente crescente até 2050.',
+      mercado: 'A oferta global ainda é fração mínima do consumo de querosene — o gargalo é matéria-prima. A Macaúba endereça esse gargalo em escala continental.'
+    },
+    farelo: {
+      nome: 'Farelo / Torta', subtitulo: 'Nutrição Animal', categoria: 'Nutrição',
+      tag: '03 / Nutrição', unit: 't', volBase: 1.2, volUnit: 'Bi t', preco: 180, revBase: 216.00, color: '#7ec488',
+      blurb: 'Torta proteica prensada. Base nutricional para bovinos, suínos e aves — custo marginal próximo de zero.',
+      descricao: 'Subproduto sólido rico em proteína e fibra após a extração do óleo. Composição comparável ao farelo de soja, com custo estruturalmente menor.',
+      aplicacoes: 'Ração para bovinos, suínos, aves, aquicultura e pet food.',
+      vantagem: 'Disponível na unidade de esmagamento, junto ao plantio — custo logístico marginal próximo de zero.',
+      mercado: 'Em 100 M ha o volume equivale a quase 10× a produção atual de farelo de soja do Brasil.'
+    },
+    laurico: {
+      nome: 'Ácido Láurico', subtitulo: 'Oleoquímica', categoria: 'Química',
+      tag: '04 / Química', unit: 't', volBase: 62, volUnit: 'Mi t', preco: 1200, revBase: 74.40, color: '#d8c23a',
+      blurb: 'Matéria-prima para tensoativos, cosméticos, sabões e química especializada de alto valor agregado.',
+      descricao: 'Ácido graxo saturado extraído do óleo da amêndoa, com propriedades tensoativas — o mesmo composto que torna o óleo de palmiste estratégico.',
+      aplicacoes: 'Sabões, detergentes, xampus, cosméticos, surfactantes industriais e formulações farmacêuticas.',
+      vantagem: 'Perfil próximo ao do óleo de palmiste, hoje majoritariamente importado — substituição direta com matéria-prima nacional.',
+      mercado: 'Oferta hoje concentrada na Malásia/Indonésia. Diversificação de origem tem valor estratégico.'
+    },
+    glp: {
+      nome: 'GLP Verde', subtitulo: 'Propano Renovável', categoria: 'Energia',
+      tag: '05 / Energia', unit: 't', volBase: 50, volUnit: 'Mi t', preco: 550, revBase: 27.50, color: '#8a6cb8',
+      blurb: 'Coproduto do hidrotratamento. Substituto direto do GLP fóssil em cozinhas e indústria.',
+      descricao: 'Propano quimicamente idêntico ao GLP fóssil, gerado como coproduto leve do hidrotratamento que gera o HVO.',
+      aplicacoes: 'Uso residencial (cocção), aquecimento industrial, matéria-prima petroquímica e autogás veicular.',
+      vantagem: 'Ciclo de carbono neutro, capturado como coproduto sem custo incremental — receita adicional sobre a mesma planta.',
+      mercado: 'O Brasil importa parcela relevante do GLP consumido. Produção doméstica reduz exposição cambial.'
+    },
+    fibras: {
+      nome: 'Fibras do Epicarpo', subtitulo: 'Materiais Avançados', categoria: 'Materiais',
+      tag: '06 / Materiais', unit: 't', volBase: 300, volUnit: 'Mi t', preco: 80, revBase: 24.00, color: '#5fa37a',
+      blurb: 'Fibras lignocelulósicas do epicarpo. Substituem fibra de vidro em autopeças e painéis estruturais.',
+      descricao: 'Fibras de alta resistência mecânica extraídas da casca externa — volume por hectare muito superior a sisal, coco ou juta.',
+      aplicacoes: 'Biocompósitos para painéis automotivos, componentes leves, isolamento e painéis para construção civil.',
+      vantagem: 'Substituto parcial de fibra de vidro em aplicações não estruturais, com pegada de carbono inferior.',
+      mercado: 'A indústria automotiva global substitui compósitos sintéticos por fibras naturais para reduzir peso e carbono.'
+    },
+    glicerina: {
+      nome: 'Glicerina Bruta', subtitulo: 'Insumos / Biofertilizantes', categoria: 'Química',
+      tag: '07 / Insumos', unit: 't', volBase: 50, volUnit: 'Mi t', preco: 250, revBase: 12.50, color: '#c87f4a',
+      blurb: 'Base de carbono orgânico para NPK nacional. Quebra a dependência de fertilizantes importados pelo Cerrado.',
+      descricao: 'Coproduto do hidrotratamento e da transesterificação. Rica em carbono orgânico, matéria-prima versátil a jusante.',
+      aplicacoes: 'Biofertilizantes, quelantes de solo, biogás, cosmética e alimentação animal.',
+      vantagem: 'Reduz a dependência brasileira de NPK importado — vulnerabilidade geopolítica da agricultura nacional.',
+      mercado: 'Aumenta a retenção de nutrientes em solos do Cerrado, reduzindo fertilizantes sintéticos importados.'
+    },
+    biomassa: {
+      nome: 'Biochar + Créditos', subtitulo: 'ESG / Carbono', categoria: 'Carbono',
+      tag: '08 / Carbono', unit: null, volBase: null, volUnit: 'Variável', preco: null, revBase: 40.00, color: '#6f7a72',
+      blurb: 'Pirólise da biomassa residual gera biochar para sequestro de carbono e créditos em mercados voluntários.',
+      descricao: 'Combina o valor energético da biomassa residual (cascas, poda) com o crédito de carbono da recuperação de pastagem e do sequestro contínuo da palmeira madura.',
+      aplicacoes: 'Energia elétrica/térmica na própria planta e créditos certificados (Verra, Gold Standard).',
+      vantagem: 'Receita sem custo de produção adicional — o carbono é sequestrado como consequência do cultivo.',
+      mercado: 'Cada hectare sequestra cerca de 20 tCO₂/ano (Imaflora). Em escala, um dos maiores estoques agrícolas certificáveis do mundo.'
+    }
+  };
+
+  function fmtNum(n, d) {
+    return n.toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function fmtUsdBi(n) {
+    if (n >= 100) return 'US$ ' + fmtNum(n, 2) + ' Bi';
+    if (n >= 1) return 'US$ ' + fmtNum(n, 2) + ' Bi';
+    return 'US$ ' + fmtNum(n * 1000, 0) + ' Mi';
+  }
+  function fmtVol(base, unit, scale) {
+    if (base === null) return 'Variável';
+    return fmtNum(base * scale, base >= 10 ? 2 : 2) + ' ' + unit;
+  }
+
+  var slider = document.getElementById('simSlider');
+  var areaNum = document.getElementById('simAreaNum');
+  var totalUsdEl = document.getElementById('simTotalUsd');
+  var totalBrlEl = document.getElementById('simTotalBrl');
+  var kpiBrl = document.getElementById('kpiBrl');
+  var navLive = document.getElementById('navLiveUsd');
+  var presetBtns = document.querySelectorAll('.preset-btn');
+  var haAtual = MAX_HA;
+
+  function pintarSlider(ha) {
+    var pct = ((ha - MIN_HA) / (MAX_HA - MIN_HA)) * 100;
+    slider.style.background = 'linear-gradient(to right, #e6b43c 0%, #e6b43c ' + pct + '%, #1d3329 ' + pct + '%, #1d3329 100%)';
+  }
+
+  function atualizar(ha) {
+    ha = Math.max(MIN_HA, Math.min(MAX_HA, ha));
+    haAtual = ha;
+    var scale = ha / BASE_HA;
+    areaNum.textContent = fmtNum(ha / 1e6, ha % 1e6 === 0 ? 0 : 1);
+
+    var total = 0;
+    Object.keys(dados).forEach(function (k) {
+      var p = dados[k];
+      var rev = p.revBase * scale;
+      total += rev;
+      var row = document.querySelector('tr[data-id="' + k + '"]');
+      if (row) {
+        var volEl = row.querySelector('.js-vol');
+        var revEl = row.querySelector('.js-rev');
+        if (volEl) volEl.textContent = fmtVol(p.volBase, p.volUnit, scale);
+        if (revEl) revEl.textContent = fmtUsdBi(rev);
+      }
+    });
+
+    var usdTxt = fmtUsdBi(total);
+    totalUsdEl.textContent = usdTxt;
+    totalBrlEl.textContent = '≈ R$ ' + fmtNum(total * CAMBIO, 2) + ' Bi';
+    document.querySelector('.js-total').textContent = usdTxt;
+    kpiBrl.textContent = (total * CAMBIO / 1000) >= 1
+      ? 'R$ ' + fmtNum(total * CAMBIO / 1000, 2) + ' Trilhões'
+      : 'R$ ' + fmtNum(total * CAMBIO, 2) + ' Bi';
+    navLive.textContent = 'USD ' + fmtNum(total, 2) + ' BI';
+
+    pintarSlider(ha);
+    presetBtns.forEach(function (btn) {
+      btn.classList.toggle('ativo', parseInt(btn.dataset.valor, 10) === ha);
+    });
+  }
+
+  slider.addEventListener('input', function () { atualizar(parseInt(slider.value, 10)); });
+  presetBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var v = parseInt(btn.dataset.valor, 10);
+      slider.value = v;
+      atualizar(v);
+    });
+  });
+
+  var grid = document.getElementById('catalogGrid');
+  Object.keys(dados).forEach(function (k) {
+    var p = dados[k];
+    var card = document.createElement('div');
+    card.className = 'sector-card group border border-[var(--line)] rounded-3xl p-7 bg-[#0a1813]/40 relative overflow-hidden';
+    card.innerHTML =
+      '<div class="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-2xl opacity-20" style="background:' + p.color + '"></div>' +
+      '<div class="relative">' +
+        '<div class="flex items-center justify-between mb-6">' +
+          '<span class="font-mono text-[10px] uppercase tracking-wider text-[var(--muted)]">' + p.tag + '</span>' +
+          '<button type="button" class="info-btn font-mono text-[13px] text-[var(--amber)] hover:text-[var(--amber-bright)]" data-key="' + k + '" aria-label="Saiba mais sobre ' + p.nome + '">ⓘ</button>' +
+        '</div>' +
+        '<h3 class="font-display text-[26px] mb-2">' + p.nome.split('—')[0].trim() + '</h3>' +
+        '<div class="text-[12px] font-mono mb-4" style="color:' + p.color + '">' + p.categoria.toUpperCase() + ' · ' + (p.volUnit === 'Variável' ? 'VARIÁVEL' : (p.volBase + ' ' + p.volUnit)) + '</div>' +
+        '<p class="text-[13px] text-[var(--ink-dim)] leading-relaxed mb-5">' + p.blurb + '</p>' +
+        '<div class="flex items-baseline gap-2 pt-4 border-t border-[var(--line)]">' +
+          '<span class="font-display text-[24px] num-grad font-semibold">' + fmtUsdBi(p.revBase) + '</span>' +
+        '</div>' +
+      '</div>';
+    grid.appendChild(card);
+  });
+
+  var overlay = document.getElementById('modalOverlay');
+  var ultimoFoco = null;
+
+  function abrirModal(chave) {
+    var p = dados[chave];
+    var scale = haAtual / BASE_HA;
+    document.getElementById('modalCategoria').textContent = p.categoria;
+    document.getElementById('modalTitulo').textContent = p.nome;
+    document.getElementById('modalSubtitulo').textContent = p.subtitulo;
+    document.getElementById('modalDesc').textContent = p.descricao;
+    document.getElementById('modalAplicacoes').textContent = p.aplicacoes;
+    document.getElementById('modalVantagem').textContent = p.vantagem;
+    document.getElementById('modalMercado').textContent = p.mercado;
+    document.getElementById('modalPreco').textContent = p.preco === null
+      ? '~US$ 400 / ha (base combinada)'
+      : ('US$ ' + fmtNum(p.preco, p.preco >= 10 ? 0 : 2) + ' / ' + p.unit);
+    document.getElementById('modalReceitaLabel').textContent = 'Receita em ' + fmtNum(haAtual / 1e6, 0) + ' Mi ha';
+    document.getElementById('modalReceita').textContent = fmtUsdBi(p.revBase * scale);
+    ultimoFoco = document.activeElement;
+    overlay.classList.add('aberto');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('modalCloseBtn').focus();
+  }
+  function fecharModal() {
+    overlay.classList.remove('aberto');
+    document.body.style.overflow = '';
+    if (ultimoFoco) ultimoFoco.focus();
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.info-btn');
+    if (btn) abrirModal(btn.getAttribute('data-key'));
+  });
+  document.getElementById('modalCloseBtn').addEventListener('click', fecharModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) fecharModal(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('aberto')) fecharModal();
+  });
+
+  atualizar(MAX_HA);
+})();
+</script>
+
+</body>
+</html>
