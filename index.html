@@ -1303,17 +1303,22 @@
   const els = document.querySelectorAll('.reveal');
   const io = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.15 });
+  }, { threshold: 0.05, rootMargin: '0px 0px -50px 0px' });
   els.forEach(el=>io.observe(el));
 })();
 
 // Inicializa o Lenis para um scroll super suave (Smooth Scroll Premium)
 if (typeof Lenis !== 'undefined') {
   const lenis = new Lenis({
-    autoRaf: true,
     lerp: 0.1, // Suavidade do scroll
     smoothWheel: true
   });
+  
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
 }
 
 (function(){
